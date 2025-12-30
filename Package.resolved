@@ -1,0 +1,24 @@
+{
+  "originHash" : "5d3d5ae2e0283ee28c6d4716e400feda836014df659d4ade9367d53e4bd73a15",
+  "pins" : [
+    {
+      "identity" : "snappydatastructs_private",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cacmartinez/SnappyDataStructs_private.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ad699d176ed0420acb34cae8fdee21a2cc9d36a7"
+      }
+    },
+    {
+      "identity" : "strategydispatchqueue_private",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cacmartinez/StrategyDispatchQueue_private.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "337df2d335439134eb1102a527fd5c177a7c0dd8"
+      }
+    }
+  ],
+  "version" : 3
+}
