@@ -45,8 +45,8 @@ extension SyncAccessibleExecutorSource {
                 unownedJob.runSynchronously(isolatedTo: self.asUnownedSerialExecutor(),
                                             taskExecutor: self.asUnownedTaskExecutor())
             } else {
-                queueDispatchAction(queue, qos(from: jobPriority)) {
-                    print("on async queue: \(self.queue)")
+                let qos = qos(from: jobPriority)
+                queueDispatchAction(queue, qos) {
                     unownedJob.runSynchronously(isolatedTo: self.asUnownedSerialExecutor(),
                                                 taskExecutor: self.asUnownedTaskExecutor())
                 }
