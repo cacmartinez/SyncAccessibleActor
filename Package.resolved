@@ -1,5 +1,5 @@
 {
-  "originHash" : "5d3d5ae2e0283ee28c6d4716e400feda836014df659d4ade9367d53e4bd73a15",
+  "originHash" : "94807237da2cb2854dfae934b73c319b4ac3db34e1e8d21fed2d61378d3bc758",
   "pins" : [
     {
       "identity" : "snappydatastructs_private",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/cacmartinez/StrategyDispatchQueue_private.git",
       "state" : {
         "branch" : "main",
-        "revision" : "337df2d335439134eb1102a527fd5c177a7c0dd8"
+        "revision" : "b3663219e75cda8cdca623546ea205f8e991ed78"
       }
     }
   ],

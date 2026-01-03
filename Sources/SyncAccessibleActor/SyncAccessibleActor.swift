@@ -8,25 +8,29 @@ public protocol SyncAccessibleActor: Actor {
 }
 
 public extension SyncAccessibleActor {
+    
+    
     nonisolated var unownedExecutor: UnownedSerialExecutor {
         executorSource.asynchronousExecutor.asUnownedSerialExecutor()
     }
     
     @available(*, noasync)
-    nonisolated func performSynchronously<T, E: Error>(_ action: @Sendable (_ actor: isolated Self) throws(E) -> T) throws(E) -> T where T: Sendable {
-        try withoutActuallyEscaping(action) { (escapingAction: @escaping @Sendable (_ actor: isolated Self) throws(E) -> T) throws(E) -> T in
-            var result: Result<T, E>?
-            Task(executorPreference: executorSource.synchronousExecutor) {
+    nonisolated func performSynchronously<T, E: Error>(_ action: @Sendable (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> sending T {
+        try withoutActuallyEscaping(action) { (escapingAction: @Sendable @escaping (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> sending T in
+            
+            nonisolated(unsafe) var result: Result<T, E>? = nil
+            let taskAction = escapingAction
+            Task(executorPreference: executorSource.synchronousExecutor) { @Sendable in
                 print("Main - sync task started")
                 do throws(E) {
-                    result = .success(try await escapingAction(self))
+                    result = .success(try await taskAction(self))
                 } catch {
                     result = .failure(error)
                 }
                 print("Main - sync task ended")
             }
             guard let result else {
-                fatalError("Block reached a suspension point before completing. This should be impossible because it is an isolated synchronous block.")
+                fatalError("Block reached a suspension point before completing. This should be impossible because it is an actor isolated synchronous block.")
             }
             return try result.get()
         }

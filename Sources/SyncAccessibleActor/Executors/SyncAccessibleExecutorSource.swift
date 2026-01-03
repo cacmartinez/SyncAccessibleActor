@@ -11,7 +11,7 @@ public final class SyncAccessibleExecutorSource: Sendable {
     let synchronousExecutor: Executor
     let asynchronousExecutor: Executor
     
-    init(queueStrategy: QueueingStrategy = .prioritizingByQOS) {
+    public init(queueStrategy: any QueueingStrategy<StrategyDispatchQueue.WorkItem> = .prioritizingByQOS) {
         let queue = StrategyDispatchQueue(queueingStrategy: queueStrategy,
                                           minimumQOS: .background)
         self.synchronousExecutor = Executor(queue: queue) { queue, qos, execute in

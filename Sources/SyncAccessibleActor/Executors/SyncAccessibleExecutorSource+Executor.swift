@@ -61,6 +61,10 @@ extension SyncAccessibleExecutorSource {
             UnownedTaskExecutor(ordinary: self)
         }
         
+        func isIsolatingCurrentContext() -> Bool? {
+            meetsDispatchCondition(condition: .onQueue(queue))
+        }
+        
         func checkIsolated() {
             dispatchPrecondition(condition: .onQueue(queue))
         }
