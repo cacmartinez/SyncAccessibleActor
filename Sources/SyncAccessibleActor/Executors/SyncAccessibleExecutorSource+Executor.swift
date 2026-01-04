@@ -10,10 +10,15 @@ import StrategyDispatchQueue
 
 extension SyncAccessibleExecutorSource {
     final class Executor: SerialExecutor, TaskExecutor {
-        private let queue: StrategyDispatchQueue
-        private let queueDispatchAction: @Sendable (_ queue: StrategyDispatchQueue, _ qos: DispatchQoS, _ execute: sending @escaping () -> Void) -> Void
+        private let queue: StrategyDispatchSerialQueue
+        private let queueDispatchAction: @Sendable (_ queue: StrategyDispatchSerialQueue,
+                                                    _ qos: DispatchQoS,
+                                                    _ execute: sending @escaping () -> Void) -> Void
         
-        init(queue: StrategyDispatchQueue, queueDispatchAction: @escaping @Sendable (_ queue: StrategyDispatchQueue, _ qos: DispatchQoS, _ execute: sending @escaping () -> Void) -> Void) {
+        init(queue: StrategyDispatchSerialQueue,
+             queueDispatchAction: @escaping @Sendable (_ queue: StrategyDispatchSerialQueue,
+                                                       _ qos: DispatchQoS,
+                                                       _ execute: sending @escaping () -> Void) -> Void) {
             self.queue = queue
             self.queueDispatchAction = queueDispatchAction
         }
