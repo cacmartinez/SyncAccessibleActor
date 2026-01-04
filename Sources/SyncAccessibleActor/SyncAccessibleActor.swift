@@ -12,29 +12,6 @@ public extension SyncAccessibleActor {
         executorSource.asynchronousExecutor.asUnownedSerialExecutor()
     }
     
-//    @available(*, noasync)
-//    nonisolated func performSynchronously<T, E: Error>(_ action: (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> T {
-//        try withoutActuallyEscaping(action) { (escapingAction: consuming @escaping (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> T in
-//            
-//            var result: SendableWrapper<T, E>?
-////            let taskAction = SendableWrapper(wrapped: consume escapingAction)
-//            Task(executorPreference: executorSource.synchronousExecutor) { //@Sendable in
-//                print("Main - sync task started")
-//                do throws(E) {
-//                    result = SendableWrapper(wrapped: .success(try await escapingAction(self)))
-//                } catch {
-//                    result = SendableWrapper(wrapped: .failure(error))
-//                }
-//                print("Main - sync task ended")
-//            }
-////            _ = consume taskAction
-//            guard let result else {
-//                fatalError("Block reached a suspension point before completing. This should be impossible because it is an actor isolated synchronous block.")
-//            }
-//            return try result.wrapped.get()
-//        }
-//    }
-    
     @available(*, noasync)
     nonisolated func performSynchronously<T, E: Error>(_ action: (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> T {
         try executorSource.backingQueue.asyncAndWait { () throws(E) -> T in

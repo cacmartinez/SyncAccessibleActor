@@ -11,17 +11,11 @@ import StrategyDispatchQueue
 extension SyncAccessibleExecutorSource {
     final class Executor: SerialExecutor, TaskExecutor {
         private let queue: StrategyDispatchSerialQueue
-//        private let queueDispatchAction: @Sendable (_ queue: StrategyDispatchSerialQueue,
-//                                                    _ qos: DispatchQoS,
-//                                                    _ execute: sending @escaping () -> Void) -> Void
+        private let nonIsolatedCheckAction: NonIsolatedAction
         
-//        init(queue: StrategyDispatchSerialQueue,
-//             queueDispatchAction: @escaping @Sendable (_ queue: StrategyDispatchSerialQueue,
-//                                                       _ qos: DispatchQoS,
-//                                                       _ execute: sending @escaping () -> Void) -> Void) {
-        init(queue: StrategyDispatchSerialQueue) {
+        init(queue: StrategyDispatchSerialQueue, nonIsolatedCheckAction: NonIsolatedAction) {
             self.queue = queue
-//            self.queueDispatchAction = queueDispatchAction
+            self.nonIsolatedCheckAction = nonIsolatedCheckAction
         }
         
         private func qos(from priority: JobPriority) -> DispatchQoS {
@@ -53,7 +47,6 @@ extension SyncAccessibleExecutorSource {
             } else {
                 let qos = qos(from: jobPriority)
                 queue.async(qos: qos) {
-//                queueDispatchAction(queue, qos) {
                     unownedJob.runSynchronously(isolatedTo: self.asUnownedSerialExecutor(),
                                                 taskExecutor: self.asUnownedTaskExecutor())
                 }
@@ -69,7 +62,21 @@ extension SyncAccessibleExecutorSource {
         }
         
         func isIsolatingCurrentContext() -> Bool? {
-            meetsDispatchCondition(condition: .onQueue(queue))
+            switch nonIsolatedCheckAction {
+            case .crash:
+                dispatchPrecondition(condition: .onQueue(queue))
+            case .assert:
+                if !meetsDispatchCondition(condition: .onQueue(queue)) {
+                    assertionFailure("Current task is not actually isolated to this executor")
+                    return false
+                }
+            case .custom(let nonIsolatedAction):
+                if !meetsDispatchCondition(condition: .onQueue(queue)) {
+                    nonIsolatedAction()
+                    return false
+                }
+            }
+            return true
         }
         
         func checkIsolated() {
