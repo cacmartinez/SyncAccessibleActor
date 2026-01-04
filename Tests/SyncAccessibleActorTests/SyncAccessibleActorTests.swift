@@ -50,7 +50,9 @@ final class SyncAccessibleActorTests {
         let result = actor.performSynchronously { actor in
             actor.assertIsolated()
             actor.nonSendable = newNonSendable
-            return (actorValue: actor.value, nonSendable: actor.generatedNonSendable(), actorNonSendableValue: actor.nonSendable.a)
+            return (actorValue: actor.value,
+                    nonSendable: actor.generatedNonSendable(),
+                    actorNonSendableValue: actor.nonSendable.a)
         }
         #expect(result.actorValue == 8)
         #expect(result.nonSendable.a == 10)
