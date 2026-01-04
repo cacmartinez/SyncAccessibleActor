@@ -9,14 +9,14 @@ public protocol SyncAccessibleActor: Actor {
 
 public extension SyncAccessibleActor {
     nonisolated var unownedExecutor: UnownedSerialExecutor {
-        executorSource.asynchronousExecutor.asUnownedSerialExecutor()
+        executorSource.executor.asUnownedSerialExecutor()
     }
     
     @available(*, noasync)
     nonisolated func performSynchronously<T, E: Error>(_ action: (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> T {
         try executorSource.backingQueue.asyncAndWait { () throws(E) -> T in
             nonisolated(unsafe) let unsafeAction = action
-            return try assumeIsolated { actor -> SendableWrapper<T, E> in
+            return try assumeIsolated { actor -> SendableWrapper<Result<T, E>> in
                 do throws(E) {
                     return SendableWrapper(wrapped: .success(try unsafeAction(actor)))
                 } catch {
@@ -27,12 +27,8 @@ public extension SyncAccessibleActor {
     }
 }
 
-private final class SendableWrapper<Value, Failure: Error>: @unchecked Sendable {
-    let wrapped: Result<Value, Failure>
-    
-    init(wrapped: consuming sending Result<Value, Failure>) {
-        self.wrapped = wrapped
-    }
+private struct SendableWrapper<Value>: @unchecked Sendable {
+    let wrapped: Value
 }
 
 

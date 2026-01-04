@@ -8,14 +8,14 @@
 import StrategyDispatchQueue
 
 public final class SyncAccessibleExecutorSource: Sendable {
-    let asynchronousExecutor: Executor
-    let backingQueue: StrategyDispatchSerialQueue
+    let executor: Executor
+    let backingQueue: any Queueable<StrategyDispatchQueue.WorkItem>
     
     public init(queueStrategy: any QueueingStrategy<StrategyDispatchQueue.WorkItem> = .prioritizingByQOS,
                 nonIsolatedCheckAction: NonIsolatedAction = .crash) {
         let queue = StrategyDispatchSerialQueue(queueingStrategy: queueStrategy,
                                                 minimumQOS: .background)
-        self.asynchronousExecutor = Executor(queue: queue, nonIsolatedCheckAction: nonIsolatedCheckAction)
+        self.executor = Executor(queue: queue, nonIsolatedCheckAction: nonIsolatedCheckAction)
         self.backingQueue = queue
     }
 }

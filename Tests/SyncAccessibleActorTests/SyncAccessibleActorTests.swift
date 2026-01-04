@@ -61,7 +61,7 @@ final class SyncAccessibleActorTests {
     
     @Test func testAccessingIsolatedValueAsynchronously() async {
         let actor = TestActor()
-        #expect(await actor.value == 8)
+        #expect(await actor.generatedNonSendable().a == 10)
     }
     
     @available(iOS 26.0, *)
