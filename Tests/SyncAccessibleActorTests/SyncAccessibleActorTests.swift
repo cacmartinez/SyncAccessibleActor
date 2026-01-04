@@ -18,6 +18,11 @@ actor TestActor: SyncAccessibleActor {
     var value = 8
     var nonSendable = TestNonSendable()
     
+    func generatedNonSendable() -> sending TestNonSendable {
+        let nonsendable = TestNonSendable()
+        nonsendable.a = value + 2
+        return nonsendable
+    }
     
     func getValueAfterSomeSleep(taskNumber: Int) -> Int? {
 //        for _ in 0..<100000 {
@@ -41,14 +46,16 @@ final class SyncAccessibleActorTests {
     @Test func testAccessingIsolatedValueSynchronously() {
         let actor = TestActor()
         
+        let newNonSendable = TestNonSendable()
+        newNonSendable.a = 6
         let result = actor.performSynchronously { actor in
             actor.assertIsolated()
-            actor.nonSendable.a = 5
-            return (actorValue: actor.value, nonSendable: TestNonSendable(), actorNonSendableValue: actor.nonSendable.a)
+            actor.nonSendable = newNonSendable
+            return (actorValue: actor.value, nonSendable: actor.generatedNonSendable(), actorNonSendableValue: actor.nonSendable.a)
         }
         #expect(result.actorValue == 8)
-        #expect(result.nonSendable.a == 3)
-        #expect(result.actorNonSendableValue == 5)
+        #expect(result.nonSendable.a == 10)
+        #expect(result.actorNonSendableValue == 6)
     }
     
     @Test func testAccessingIsolatedValueAsynchronously() async {

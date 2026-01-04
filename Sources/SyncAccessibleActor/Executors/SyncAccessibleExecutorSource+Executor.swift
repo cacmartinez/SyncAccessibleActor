@@ -11,16 +11,17 @@ import StrategyDispatchQueue
 extension SyncAccessibleExecutorSource {
     final class Executor: SerialExecutor, TaskExecutor {
         private let queue: StrategyDispatchSerialQueue
-        private let queueDispatchAction: @Sendable (_ queue: StrategyDispatchSerialQueue,
-                                                    _ qos: DispatchQoS,
-                                                    _ execute: sending @escaping () -> Void) -> Void
+//        private let queueDispatchAction: @Sendable (_ queue: StrategyDispatchSerialQueue,
+//                                                    _ qos: DispatchQoS,
+//                                                    _ execute: sending @escaping () -> Void) -> Void
         
-        init(queue: StrategyDispatchSerialQueue,
-             queueDispatchAction: @escaping @Sendable (_ queue: StrategyDispatchSerialQueue,
-                                                       _ qos: DispatchQoS,
-                                                       _ execute: sending @escaping () -> Void) -> Void) {
+//        init(queue: StrategyDispatchSerialQueue,
+//             queueDispatchAction: @escaping @Sendable (_ queue: StrategyDispatchSerialQueue,
+//                                                       _ qos: DispatchQoS,
+//                                                       _ execute: sending @escaping () -> Void) -> Void) {
+        init(queue: StrategyDispatchSerialQueue) {
             self.queue = queue
-            self.queueDispatchAction = queueDispatchAction
+//            self.queueDispatchAction = queueDispatchAction
         }
         
         private func qos(from priority: JobPriority) -> DispatchQoS {
@@ -51,7 +52,8 @@ extension SyncAccessibleExecutorSource {
                                             taskExecutor: self.asUnownedTaskExecutor())
             } else {
                 let qos = qos(from: jobPriority)
-                queueDispatchAction(queue, qos) {
+                queue.async(qos: qos) {
+//                queueDispatchAction(queue, qos) {
                     unownedJob.runSynchronously(isolatedTo: self.asUnownedSerialExecutor(),
                                                 taskExecutor: self.asUnownedTaskExecutor())
                 }
