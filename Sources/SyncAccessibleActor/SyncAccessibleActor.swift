@@ -14,7 +14,7 @@ public extension SyncAccessibleActor {
     
     @available(*, noasync)
     nonisolated func performSynchronously<T, E: Error>(_ action: (_ actor: isolated Self) throws(E) -> sending T) throws(E) -> T {
-        try executorSource.backingQueue.asyncAndWait { () throws(E) -> T in
+        try executorSource.backingQueue.asyncAndWait { _ throws(E) in
             nonisolated(unsafe) let unsafeAction = action
             return try assumeIsolated { actor -> SendableWrapper<Result<T, E>> in
                 do throws(E) {

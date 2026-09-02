@@ -11,6 +11,7 @@ final class TestNonSendable {
     var a: Int = 3
 }
 
+//actor TestActor {
 actor TestActor: SyncAccessibleActor {
     nonisolated let executorSource = SyncAccessibleExecutorSource()
     
@@ -18,6 +19,7 @@ actor TestActor: SyncAccessibleActor {
     var nonSendable = TestNonSendable()
     
     func generatedNonSendable() -> sending TestNonSendable {
+        print(Thread.current.qualityOfService.rawValue)
         let nonsendable = TestNonSendable()
         nonsendable.a = value + 2
         return nonsendable
@@ -36,6 +38,13 @@ actor TestActor: SyncAccessibleActor {
         return value
     }
     
+    @available(*, noasync)
+    nonisolated func updateNonSendableSynchronously(newNonSendable: sending TestNonSendable) {
+        performSynchronously { actor in
+            actor.nonSendable = newNonSendable
+        }
+    }
+    
     private func sleepThread() {
         Thread.sleep(forTimeInterval: 0.02)
     }
@@ -47,9 +56,9 @@ final class SyncAccessibleActorTests {
         
         let newNonSendable = TestNonSendable()
         newNonSendable.a = 6
+        actor.updateNonSendableSynchronously(newNonSendable: newNonSendable)
         let result = actor.performSynchronously { actor in
             actor.assertIsolated()
-            actor.nonSendable = newNonSendable
             return (actorValue: actor.value,
                     nonSendable: actor.generatedNonSendable(),
                     actorNonSendableValue: actor.nonSendable.a)

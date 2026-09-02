@@ -7,7 +7,7 @@
       "location" : "https://github.com/cacmartinez/SnappyDataStructs_private.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ad699d176ed0420acb34cae8fdee21a2cc9d36a7"
+        "revision" : "48db9e1c925a5f8a158ecf56b3101d7013314bb4"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/cacmartinez/StrategyDispatchQueue_private.git",
       "state" : {
         "branch" : "main",
-        "revision" : "b3663219e75cda8cdca623546ea205f8e991ed78"
+        "revision" : "8daed57558513487ca785f793146fdf5147b5eac"
       }
     }
   ],

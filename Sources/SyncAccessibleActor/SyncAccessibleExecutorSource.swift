@@ -9,9 +9,9 @@ import StrategyDispatchQueue
 
 public final class SyncAccessibleExecutorSource: Sendable {
     let executor: Executor
-    let backingQueue: any Queueable<StrategyDispatchQueue.WorkItem>
+    let backingQueue: StrategyDispatchSerialQueue<Void>
     
-    public init(queueStrategy: any QueueingStrategy<StrategyDispatchQueue.WorkItem> = .prioritizingByQOS,
+    public init(queueStrategy: sending any QueueingStrategy<StrategyDispatchQueue.WorkItem> = .prioritizingByQOS,
                 nonIsolatedCheckAction: NonIsolatedAction = .crash) {
         let queue = StrategyDispatchSerialQueue(queueingStrategy: queueStrategy,
                                                 minimumQOS: .background)

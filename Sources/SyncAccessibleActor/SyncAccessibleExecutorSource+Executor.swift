@@ -10,10 +10,10 @@ import StrategyDispatchQueue
 
 extension SyncAccessibleExecutorSource {
     final class Executor: SerialExecutor, TaskExecutor {
-        private let queue: StrategyDispatchSerialQueue
+        private let queue: StrategyDispatchSerialQueue<Void>
         private let nonIsolatedCheckAction: NonIsolatedAction
         
-        init(queue: StrategyDispatchSerialQueue, nonIsolatedCheckAction: NonIsolatedAction) {
+        init(queue: StrategyDispatchSerialQueue<Void>, nonIsolatedCheckAction: NonIsolatedAction) {
             self.queue = queue
             self.nonIsolatedCheckAction = nonIsolatedCheckAction
         }
