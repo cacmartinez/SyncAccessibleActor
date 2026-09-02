@@ -73,6 +73,7 @@ final class SyncAccessibleActorTests {
         #expect(await actor.generatedNonSendable().a == 10)
     }
     
+    @available(macOS 26.0, *)
     @available(iOS 26.0, *)
     @Test func testOrderOfExecution_qosPriorityExecutor() async throws {
         let actor = TestActor()

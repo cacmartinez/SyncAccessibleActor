@@ -4,23 +4,23 @@
 import PackageDescription
 
 let package = Package(
-    name: "SyncAccessibleActor_private",
+    name: "SyncAccessibleActor",
     platforms: [
         .macOS(.v15),
         .iOS(.v18)
     ],
     products: [
         .library(
-            name: "SyncAccessibleActor_Debug",
+            name: "SyncAccessibleActor",
             targets: ["SyncAccessibleActor"]),
     ],
     dependencies: [
-        .package(url:"https://github.com/cacmartinez/StrategyDispatchQueue_private.git", branch: "main")
+        .package(url:"https://github.com/cacmartinez/StrategyDispatchQueue.git", branch: "main")
     ],
     targets: [
         .target(
             name: "SyncAccessibleActor",
-            dependencies: [.product(name: "StrategyDispatchQueue_Debug", package: "StrategyDispatchQueue_private")],
+            dependencies: [.product(name: "StrategyDispatchQueue", package: "StrategyDispatchQueue")],
             path: "Sources/SyncAccessibleActor"),
         .testTarget(
             name: "SyncAccessibleActorTests",
